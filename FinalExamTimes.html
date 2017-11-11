@@ -1,0 +1,503 @@
+<HTML>
+<HEAD>
+	<TITLE>NC State Final Exam Finder</TITLE>
+	
+	<STYLE>
+		body {
+   			background-color: lightgreen;
+		}
+		#form {
+			text-align: center;
+		}
+		#h2 {
+			text-align: left;
+		}
+		#h3 {
+			text-align: left;
+		}
+		#dataTable {
+			text-align: center;
+			table-layout: center;
+		}
+	</STYLE>
+
+	<SCRIPT language="javascript">
+
+		function addRow(tableID) {
+			var table = document.getElementById(tableID);
+			var rowCount = table.rows.length;
+			var row = table.insertRow(rowCount);
+
+			var colCount = table.rows[0].cells.length;
+			
+			for(var i=0; i<colCount; i++) {
+
+				var newcell	= row.insertCell(i);
+
+				newcell.innerHTML = table.rows[0].cells[i].innerHTML;
+				
+				switch(newcell.childNodes[0].type) {
+					case "text":
+							newcell.childNodes[0].value = "";
+							break;
+					case "checkbox":
+							newcell.childNodes[0].checked = false;
+							break;
+					case "select-one":
+							newcell.childNodes[0].selectedIndex = 0;
+							break;
+				}
+			}
+		}
+
+		function deleteRow(tableID) {
+			try {
+			var table = document.getElementById(tableID);
+			var rowCount = table.rows.length;
+
+			for(var i=0; i<rowCount; i++) {
+				var row = table.rows[i];
+				var chkbox = row.cells[0].childNodes[2];
+				if(chkbox.checked == true) {
+					if(rowCount <= 1) {
+						alert("Why would you want to delete all the rows?");
+						break;
+					}
+					table.deleteRow(i);
+					rowCount--;
+					i--;
+				}
+			}
+			
+			}catch(e) {
+				alert(e);
+			}
+		}
+
+
+		function calculate(tableID) {
+    		document.getElementById("Finals").innerHTML = "";
+			var table = document.getElementById(tableID);
+			var rowCount = table.rows.length;
+
+			for(var i=0; i<rowCount; i++) {
+				var row = table.rows[i];
+				var cell = row.cells[1];
+				var days = "";
+
+				// Store the checked days
+				for (var j=0; j < cell.childNodes.length; j++) {
+					if (cell.childNodes[j].type == "checkbox") {
+					 	if (cell.childNodes[j].checked == true) {
+							
+							// daycode is the number of the childNode
+							// childNodes in cell[1] are #text, input, #brElement
+							// 1 = Mon, 4 = Tues, 7 = Wed, 10 = Thurs, 13 = Fri
+							var daycode = j;
+							days += daycode + " ";
+						}
+					}	
+				} 
+				// Set the current cell to the time column
+				cell = row.cells[2];
+				// Store the selected startTime
+				var dropDown = cell.getElementsByTagName("select")[0];
+        		var startTime = dropDown.options[dropDown.selectedIndex].value;
+        		
+        		// Determine the final exam time from checked days and class start time
+        		switch(days) {
+        			
+        			case "": 
+        				document.getElementById("Finals").innerHTML += "No days were selected.<br>\n";
+        				break;
+
+        			// Monday
+        			case "1 ":
+        				if (startTime == "first") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Monday, December 4, 2017<br>\n";
+        				}
+        				else if (startTime == "second" || startTime == "third") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Wednesday, December 13, 2017<br>\n";
+        				}
+        				else if (startTime == "fourth" || startTime ==  "fifth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Monday, December 11, 2017<br>\n";
+        				}
+        				else if (startTime == "sixth" || startTime == "seventh" || startTime == "eighth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Wednesday, December 13, 2017<br>\n";
+        				}
+        				else if (startTime == "ninth" || startTime == "tenth" || startTime == "eleventh") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Friday, December 8, 2017<br>\n";
+        				}
+        				else if (startTime == "twelfth" || startTime == "thirteenth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 6:00 - 9:00 PM / Monday, December 11, 2017<br>\n";
+        				}
+        				else if (startTime == "fourteenth" || startTime == "fifteenth" || startTime == "sixteenth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 6:00 - 9:00 PM / Wednesday, December 13, 2017<br>\n";
+        				}
+        				else document.getElementById("Finals").innerHTML += "There is no class with this start time on this day. Please verify you have you selected correctly.<br>\n";
+        				break;
+        			
+        			// Tuesday
+        			case "4 ":
+        				if (startTime == "first" || startTime == "second") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Tuesday, December 5, 2017<br>\n";
+        				}
+        				else if (startTime == "third" || startTime ==  "fourth" || startTime ==  "fifth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Tuesday, December 12, 2017<br>\n";
+        				}
+        				else if (startTime == "sixth" || startTime == "eighth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Tuesday, December 5, 2017<br>\n";
+        				}
+        				else if (startTime == "ninth" || startTime == "tenth" || startTime == "eleventh") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Thursday, December 7, 2017<br>\n";
+        				}
+        				else if (startTime == "twelfth" || startTime == "thirteenth" || startTime == "fourteenth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 6:00 - 9:00 PM / Tuesday, December 5, 2017<br>\n";
+        				}
+        				else document.getElementById("Finals").innerHTML += "There is no class with this start time on this day. Please verify you have you selected correctly.<br>\n";
+        				break;
+        			
+        			// Wednesday
+        			case "7 ":
+        				if (startTime == "first" || startTime == "second" || startTime == "third" || startTime ==  "fourth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Friday, December 8, 2017<br>\n";
+        				}
+        				else if (startTime ==  "fifth" || startTime == "sixth" || startTime == "seventh") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Monday, December 4, 2017<br>\n";
+        				}
+        				else if (startTime == "eighth" || startTime == "ninth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Monday, December 11, 2017<br>\n";
+        				}
+        				else if (startTime == "tenth" || startTime == "eleventh" || startTime == "twelfth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 6:00 - 9:00 PM / Friday, December 8, 2017<br>\n";
+        				}
+        				else if (startTime == "thirteenth" || startTime == "fourteenth" || startTime == "fifteenth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 6:00 - 9:00 PM / Monday, December 4, 2017<br>\n";
+        				}
+        				else document.getElementById("Finals").innerHTML += "There is no class with this start time on this day. Please verify you have you selected correctly.<br>\n";
+        				break;
+        			
+        			// Thursday
+        			case "10 ":
+        				if (startTime == "first" || startTime == "second" || startTime == "third" || startTime ==  "fourth" || startTime ==  "fifth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Thursday, December 7, 2017<br>\n";
+        				}
+        				else if (startTime == "sixth" || startTime == "seventh" || startTime == "eighth" || startTime == "ninth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Tuesday, December 12, 2017<br>\n";
+        				}
+        				else if (startTime == "tenth" || startTime == "eleventh") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 6:00 - 9:00 PM / Tuesday, December 12, 2017<br>\n";
+        				}
+        				else if (startTime == "twelfth" || startTime == "thirteenth" || startTime == "fourteenth" || startTime == "fifteenth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 6:00 - 9:00 PM / Thursday, December 7, 2017<br>\n";
+        				}
+        				else document.getElementById("Finals").innerHTML += "There is no class with this start time on this day. Please verify you have you selected correctly.<br>\n";
+        				break;
+        			
+        			// Friday
+        			case "13 ":
+        				if (startTime == "first") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Monday, December 4, 2017<br>\n";
+        				}
+        				else if (startTime == "second" || startTime == "third" || startTime ==  "fourth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Friday, December 8, 2017<br>\n";
+        				}
+        				else if (startTime == "fifth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Monday, December 4, 2017<br>\n";
+        				}
+        				else if (startTime == "sixth" || startTime == "seventh" || startTime == "eighth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Wednesday, December 13, 2017<br>\n";
+        				}
+        				else if (startTime == "ninth" || startTime == "tenth" || startTime == "eleventh") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 6:00 - 9:00 PM / Friday, December 8, 2017<br>\n";
+        				}
+        				else if (startTime == "twelfth" || startTime == "thirteenth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 6:00 - 9:00 PM / Monday, December 11, 2017<br>\n";
+        				}
+        				else document.getElementById("Finals").innerHTML += "There is no class with this start time on this day. Please verify you have you selected correctly.<br>\n";
+        				break;
+        			
+        			// Monday, Wednesday
+        			case "1 7 ":
+        				if (startTime == "first") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Monday, December 4, 2017<br>\n";
+        				}
+        				else if (startTime == "third") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Wednesday, December 13, 2017<br>\n";
+        				}
+        				else if (startTime == "fifth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Monday, December 11, 2017<br>\n";
+        				}
+        				else if (startTime == "seventh") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Wednesday, December 13, 2017<br>\n";
+        				}
+        				else if (startTime == "ninth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Monday, December 11, 2017<br>\n";
+        				}
+        				else if (startTime == "eleventh") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Friday, December 8, 2017<br>\n";
+        				}
+        				else if (startTime == "thirteenth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 6:00 - 9:00 PM / Monday, December 11, 2017<br>\n";
+        				}
+        				else if (startTime == "fifteenth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 6:00 - 9:00 PM / Wednesday, December 13, 2017<br>\n";
+        				}
+        				else document.getElementById("Finals").innerHTML += "There is no class with this start time on this day. Please verify you have you selected correctly.<br>\n";
+        				break;
+        			
+        			// Monday, Wednesday, Friday
+        			case "1 7 13":
+        				if (startTime == "first") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Monday, December 4, 2017<br>\n";
+        				}
+        				else if (startTime == "second") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Wednesday, December 13, 2017<br>\n";
+        				}
+        				else if (startTime == "fourth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Friday, December 8, 2017<br>\n";
+        				}
+        				else if (startTime == "fifth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Monday, December 11, 2017<br>\n";
+        				}
+        				else if (startTime == "sixth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Monday, December 4, 2017<br>\n";
+        				}
+        				else if (startTime == "eighth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Wednesday, December 13, 2017<br>\n";
+        				}
+        				else if (startTime == "ninth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Monday, December 11, 2017<br>\n";
+        				}
+        				else if (startTime == "eleventh") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Friday, December 8, 2017<br>\n";
+        				}
+        				else if (startTime == "thirteenth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 6:00 - 9:00 PM / Monday, December 11, 2017<br>\n";
+        				}
+        				else if (startTime == "fifteenth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 6:00 - 9:00 PM / Wednesday, December 13, 2017<br>\n";
+        				}
+        				else document.getElementById("Finals").innerHTML += "There is no class with this start time on this day. Please verify you have you selected correctly.<br>\n";
+        				break;
+        			
+        			// Tuesday, Thursday
+        			case "4 10 ":
+        				if (startTime == "first") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Tuesday, December 5, 2017<br>\n";
+        				}
+        				else if (startTime == "third") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Thursday, December 7, 2017<br>\n";
+        				}
+        				else if (startTime == "fifth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Tuesday, December 12, 2017<br>\n";
+        				}
+        				else if (startTime == "sixth" || startTime == "seventh") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Tuesday, December 5, 2017<br>\n";
+        				}
+        				else if (startTime == "ninth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Tuesday, December 12, 2017<br>\n";
+        				}
+        				else if (startTime == "eleventh") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Thursday, December 7, 2017<br>\n";
+        				}
+        				else if (startTime == "thirteenth" || startTime == "fifteenth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 6:00 - 9:00 PM / Tuesday, December 5, 2017<br>\n";
+        				}
+        				else document.getElementById("Finals").innerHTML += "There is no class with this start time on this day. Please verify you have you selected correctly.<br>\n";
+        				break;
+        			
+        			// Monday, Friday
+        			case "1 13":
+        				if (startTime == "first") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Monday, December 4, 2017<br>\n";
+        				}
+        				else if (startTime == "third") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Wednesday, December 13, 2017<br>\n";
+        				}
+        				else if (startTime == "fifth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Monday, December 11, 2017<br>\n";
+        				}
+        				else if (startTime == "seventh") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Wednesday, December 13, 2017<br>\n";
+        				}
+        				else if (startTime == "ninth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Monday, December 11, 2017<br>\n";
+        				}
+        				else if (startTime == "eleventh") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Friday, December 8, 2017<br>\n";
+        				}
+        				else if (startTime == "thirteenth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 6:00 - 9:00 PM / Monday, December 11, 2017<br>\n";
+        				}
+        				else if (startTime == "fifteenth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 6:00 - 9:00 PM / Wednesday, December 13, 2017<br>\n";
+        				}
+        				else document.getElementById("Finals").innerHTML += "There is no class with this start time on this day. Please verify you have you selected correctly.<br>\n";
+        				break;
+        			
+        			// Wednesday, Friday
+        			case "7 13 ":
+        				if (startTime == "first") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Monday, December 4, 2017<br>\n";
+        				}
+        				else if (startTime == "third") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Friday, December 8, 2017<br>\n";
+        				}
+        				else if (startTime == "fifth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 8:00 - 11:00 AM / Monday, December 11, 2017<br>\n";
+        				}
+        				else if (startTime == "seventh") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Wednesday, December 13, 2017<br>\n";
+        				}
+        				else if (startTime == "ninth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Monday, December 11, 2017<br>\n";
+        				}
+        				else if (startTime == "eleventh") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 1:00 - 4:00 PM / Friday, December 8, 2017<br>\n";
+        				}
+        				else if (startTime == "thirteenth") {
+        					var currentRow = i+1;
+        					document.getElementById("Finals").innerHTML += "Class " + currentRow + " Final Exam: 6:00 - 9:00 PM / Monday, December 11, 2017<br>\n";
+        				}
+        				else document.getElementById("Finals").innerHTML += "There is no class with this start time on this day. Please verify you have you selected correctly.<br>\n";
+        				break;
+        			
+        			default:
+        				document.getElementById("Finals").innerHTML += "There is no class with this start time and combination of days. Please verify you have you selected correctly.<br>\n";
+        		}
+			}
+
+    	}
+
+	</SCRIPT>
+</HEAD>
+<BODY>
+	<form id="form">
+	<div><h1>NC State Final Exam Finder</h1></div>
+	<br>
+	<div>
+		<h2 id='h2'><u>How to use:</u></h2>
+		<h3 id='h3'>
+			1. Check the boxes for the days of the week your class meets.<br>
+			2. Select the start time of your class for each day.<br>
+			3. Click the Add Class button to add all your classes.<br>
+			4. Check the Remove box then click the Remove Class button to remove a class from the table.<br>
+			5. Click the Tell Me My Final Exam Times button to show your final exam times.<br><br><br>
+		</h3>
+	</div>
+
+	<div>
+	<INPUT id="button" type="button" value="Add Class" onclick="addRow('dataTable')" />
+
+	<INPUT id="button" type="button" value="Remove Class" onclick="deleteRow('dataTable')" />
+	</div>
+
+	<TABLE id="dataTable" width="350px" border="1" align="center">
+		<TR>
+			<TD>Remove<br><INPUT type="checkbox" name="chk"/></TD>
+			<TD>
+				M<INPUT type="checkbox" name="chk"/><br>
+				T<INPUT type="checkbox" name="chk"/><br>
+				W<INPUT type="checkbox" name="chk"/><br>
+				TH<INPUT type="checkbox" name="chk"/><br>
+				F<INPUT type="checkbox" name="chk"/><br>
+			</TD>
+			<TD>
+				<SELECT name="Start Time">
+					<OPTION value="first">8:30 AM</OPTION>
+					<OPTION value="second">9:35 AM</OPTION>
+					<OPTION value="third">10:15 AM</OPTION>
+					<OPTION value="fourth">10:40 AM</OPTION>
+					<OPTION value="fifth">11:45 AM</OPTION>
+					<OPTION value="sixth">12:50 PM</OPTION>
+					<OPTION value="seventh">1:30 PM</OPTION>
+					<OPTION value="eighth">1:55 PM</OPTION>
+					<OPTION value="ninth">3:00 PM</OPTION>
+					<OPTION value="tenth">4:10 PM</OPTION>
+					<OPTION value="eleventh">4:30 PM</OPTION>
+					<OPTION value="twelfth">5:20 PM</OPTION>
+					<OPTION value="thirteenth">6:00 PM</OPTION>
+					<OPTION value="fourteenth">7:10 PM</OPTION>
+					<OPTION value="fifteenth">7:30 PM</OPTION>
+					<OPTION value="sixteenth">8:00 PM</OPTION>
+				</SELECT>
+			</TD>
+		</TR>
+	</TABLE>
+
+	<p>
+	<input id="button" type="button" onclick= "calculate('dataTable')" value="Tell Me My Final Exam Times">  
+	</p>
+
+	<p id="Finals"></p>
+	<br>
+	<br>
+	<br>
+	</form>
